@@ -176,6 +176,9 @@ export default {
             if (range && range.length > 0) {
                 this.filters.startDateFilter = range[0];
                 this.filters.endDateFilter = range[1];
+            }else{
+                this.filters.startDateFilter = null;
+                this.filters.endDateFilter = null;
             }
         },
     sort(column) {
