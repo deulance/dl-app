@@ -25,22 +25,22 @@
           end: null,
         },
         monthNames: [
-          "January", "February", "March", "April", "May", "June",
-          "July", "August", "September", "October", "November", "December"
+          "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+          "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
         ],
         shortMonthNames: [
-          "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-          "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+          "Jan", "Fev", "Mar", "Abr", "Mai", "Jun",
+          "Jul", "Ago", "Set", "Out", "Nov", "Dez"
         ],
       };
     },
 
     watch: {
         dateRange(){
-            console.log('====================================');
-            console.log(this.dateRange);
-            console.log('====================================');
-            this.$emit('selectDataRange', this.dateRange);
+           // console.log('====================================');
+           // console.log(this.dateRange);
+           // console.log('====================================');
+           this.$emit('selectDataRange', this.dateRange);
         }
     }
   };

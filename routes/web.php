@@ -40,6 +40,7 @@ Route::prefix('admin')->group(function(){
 
         
         Route::get('/deulanceboard', [DeulanceBoardController::class, 'index'])->middleware(CheckAdminPermission::class . ':"Leaderboard"')->name('admin.deulanceboard');
+        Route::post('/deulanceboard/fetch_data', [DeulanceBoardController::class, 'fetch_data'])->middleware(CheckAdminPermission::class . ':"Leaderboard"')->name('admin.deulanceboard.fetch');
         
         
         Route::name('admin.')->group(function() {
