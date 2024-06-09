@@ -2,14 +2,14 @@
     <div>
       <datepicker
         v-model="dateRange"
-        format="yyyy-MM-dd"
+        format="dd/MM/yyyy"
         range
         locale="pt" 
         :month-names="monthNames"
         :short-month-names="shortMonthNames"
         cancelText="Cancelar" 
         selectText="Selecionar"
-        week-num-name="W" 
+       
       ></datepicker>
     </div>
   </template>
@@ -45,7 +45,7 @@
            // console.log(this.dateRange);
            // console.log('====================================');
            this.$emit('selectDataRange', this.dateRange);
-        }
+        } 
     }
   };
   </script>

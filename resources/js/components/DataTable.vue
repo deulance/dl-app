@@ -198,6 +198,7 @@ export default {
   },
   methods: {
     dateFilter(range) {
+      console.log(range);
             if (range && range.length > 0) {
                 this.filters.startDateFilter = range[0];
                 this.filters.endDateFilter = range[1];
@@ -251,7 +252,7 @@ export default {
       axios.post('/admin/deulanceboard/fetch_data', this.filters)
         .then(response => {
           //this.$emit('update:rows', response.data);
-          console.log( this.rows,response.data );
+          //console.log( this.rows,response.data );
           this.rows = response.data;
         })
         .catch(error => {
