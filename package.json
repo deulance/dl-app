@@ -49,6 +49,7 @@
         "vue-final-modal": "^3.4.11",
         "vue-good-table": "^2.21.11",
         "vue-search-select": "^3.1.2",
+        "vue-simple-range-slider": "^1.1.0",
         "vue-slider-component": "^3.2.24",
         "vue-toasted": "^1.1.28",
         "vue-toastr": "^2.1.2",

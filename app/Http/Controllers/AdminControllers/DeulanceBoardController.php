@@ -63,7 +63,14 @@ class DeulanceBoardController extends Controller
         if ($request->has('endDateFilter') && $request->endDateFilter !== null) {
             $query->where('data_1a_praca', '<=', $request->endDateFilter);
         }
+
+        if ($request->has('startPriceFilter') && $request->startPriceFilter !== null) {
+            $query->where('preco_1a_praca', '>=', $request->startPriceFilter);
+        }
     
+        if ($request->has('endPriceFilter') && $request->endPriceFilter !== null) {
+            $query->where('preco_1a_praca', '<=', $request->endPriceFilter);
+        }   
         $results = $query->get();
 
         return response()->json($results);

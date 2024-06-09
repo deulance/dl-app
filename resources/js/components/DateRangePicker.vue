@@ -4,8 +4,12 @@
         v-model="dateRange"
         format="yyyy-MM-dd"
         range
+        locale="pt" 
         :month-names="monthNames"
         :short-month-names="shortMonthNames"
+        cancelText="Cancelar" 
+        selectText="Selecionar"
+        week-num-name="W" 
       ></datepicker>
     </div>
   </template>

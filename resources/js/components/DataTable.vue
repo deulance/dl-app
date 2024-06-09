@@ -3,8 +3,8 @@
     <div >
 
       <form @submit.prevent="submitFilterForm">
-        <div class="row">
-          <div class="col-3">
+        <div class="row mb-3">
+          <div class="col-6 col-md-2">
             <div class="form-group">
               <label>Estado</label>
               <div class="input-group">
@@ -14,7 +14,7 @@
               </div>
             </div>
           </div>
-          <div class="col-3">
+          <div class="col-6 col-md-3">
             <div class="form-group">
               <label>Data primeira pra&ccedil;a</label>
               <div class="input-group">
@@ -22,7 +22,7 @@
               </div>
             </div>
           </div>  
-          <div class="col-3">
+          <div class="col-6 col-md-2">
             <div class="form-group">
               <label>Tipo de Bem</label>
               <div class="input-group">
@@ -31,8 +31,24 @@
               </div>
             </div>
           </div>
+          <div class="col-6 col-md-3">
+            <div class="form-group">
+              <label>Preco primeira pra&ccedil;a</label>
+              <div class="input-group">
+                <VueSimpleRangeSlider
+                  style="width: 300px"
+                  :min="0"
+                  :max="1000000"
+                  exponential
+                  v-model="state.range"
+                >
+                  <template #prefix="{ value }">R$ </template>
+                </VueSimpleRangeSlider> 
+              </div>
+            </div>
+          </div>
          
-          <div class="row col-3 d-flex align-items-center">
+          <div class=" colbtn row col-12 col-md-2 d-flex align-items-center">
             <div class="form-group mb-0">
              
               <div class="input-group">
@@ -101,12 +117,20 @@ import axios from 'axios';
 import { ModelSelect } from "vue-search-select";
 import { ModelListSelect } from "vue-search-select";
 import DateRangePicker from './DateRangePicker.vue';
+
+import VueSimpleRangeSlider from "vue-simple-range-slider";
+import "vue-simple-range-slider/css";
+import { reactive, defineComponent } from "vue";
+
 export default {
   components: {
       ModelSelect,
       ModelListSelect,
-      DateRangePicker,
+      DateRangePicker,VueSimpleRangeSlider
       
+  },setup() {
+    const state = reactive({ range: [20, 1000], number: 10 });
+    return { state };
   },
   props: {
     columns: Array,
@@ -128,11 +152,12 @@ export default {
       pageSize: 10,
       selectedColumns:  this.initiallySelectedColumns || [] ,
       filters: {
-        pricerange: '',
         estado: '',
         tipoDoBem:'',
         startDateFilter: null,
         endDateFilter: null,
+        startPriceFilter: null,
+        endPriceFilter: null
       },
     };
   },
@@ -215,10 +240,17 @@ export default {
       }
     },
     submitFilterForm() {
+      let priceRange = this.state.range;
+      if (priceRange && priceRange.length > 0) {
+          this.filters.startPriceFilter = priceRange[0];
+          this.filters.endPriceFilter = priceRange[1];
+      }else{
+          this.filters.startPriceFilter = null;
+          this.filters.endPriceFilter = null;
+      }
       axios.post('/admin/deulanceboard/fetch_data', this.filters)
         .then(response => {
           //this.$emit('update:rows', response.data);
-          //console.log('aqui  1',this.rows);
           console.log( this.rows,response.data );
           this.rows = response.data;
         })
@@ -241,6 +273,11 @@ export default {
     overflow-y: scroll;
     overflow-x: hidden;
   }
- 
-
+  @media (max-width: 768px)  {
+      
+    
+    .colbtn{
+      justify-content: center !important;
+    }
+  }
 </style>
