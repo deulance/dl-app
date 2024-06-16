@@ -81,7 +81,7 @@
       <thead>
         <tr>
           <th v-for="column in visibleColumns" :key="column" @click="sort(column)">
-            {{ column }}
+            {{ column.replace(/_/g,' ') }}
             <span v-if="sortColumn === column">
               {{ sortDirection === 'asc' ? '▲' : '▼' }}
             </span>
@@ -89,25 +89,33 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="row in paginatedRows" :key="row.id">
+        <tr v-for="row in paginatedRows" :key="row.id"  @click="openRowUrl(row.URL)" style="cursor: pointer;">
           <td v-for="column in visibleColumns" :key="column">{{ row[column.toLowerCase()] }}</td>
         </tr>
       </tbody>
+
     </table>
-    <!-- Navegação da página -->
+    
     <nav aria-label="Page navigation">
       <ul class="pagination">
         <li class="page-item" :class="{ disabled: currentPage === 1 }">
-          <a class="page-link" href="#" @click="previousPage">&laquo;</a>
+          <a class="page-link" href="#" @click.prevent="goToPage(1)">&laquo;&laquo;</a>
         </li>
-        <li class="page-item" v-for="page in totalPages" :key="page" :class="{ active: page === currentPage }">
-          <a class="page-link" href="#" @click="goToPage(page)">{{ page }}</a>
+        <li class="page-item" :class="{ disabled: currentPage === 1 }">
+          <a class="page-link" href="#" @click.prevent="previousPage">&laquo;</a>
+        </li>
+        <li class="page-item" v-for="page in visiblePages" :key="page" :class="{ active: page === currentPage }">
+          <a class="page-link" href="#" @click.prevent="goToPage(page)">{{ page }}</a>
         </li>
         <li class="page-item" :class="{ disabled: currentPage === totalPages }">
-          <a class="page-link" href="#" @click="nextPage">&raquo;</a>
+          <a class="page-link" href="#" @click.prevent="nextPage">&raquo;</a>
+        </li>
+        <li class="page-item" :class="{ disabled: currentPage === totalPages }">
+          <a class="page-link" href="#" @click.prevent="goToPage(totalPages)">&raquo;&raquo;</a>
         </li>
       </ul>
-    </nav>
+    </nav>    
+  
   </div>
 </template>
 
@@ -126,7 +134,8 @@ export default {
   components: {
       ModelSelect,
       ModelListSelect,
-      DateRangePicker,VueSimpleRangeSlider
+      DateRangePicker,
+      VueSimpleRangeSlider
       
   },setup() {
     const state = reactive({ range: [20, 1000], number: 10 });
@@ -158,7 +167,7 @@ export default {
         endDateFilter: null,
         startPriceFilter: null,
         endPriceFilter: null
-      },
+      }
     };
   },
   mounted() {
@@ -191,12 +200,39 @@ export default {
     totalPages() {
       return Math.ceil(this.filteredAndSortedRows.length / this.pageSize);
     },
+    visiblePages() {
+      const range = 3; 
+      let start = this.currentPage - range;
+      let end = this.currentPage + range;
+
+      if (start < 1) {
+        start = 1;
+        end = Math.min(1 + range * 2, this.totalPages);
+      }
+      if (end > this.totalPages) {
+        end = this.totalPages;
+        start = Math.max(1, this.totalPages - range * 2);
+      }
+
+      const pages = [];
+      for (let page = start; page <= end; page++) {
+        pages.push(page);
+      }
+      return pages;
+    },
     visibleColumns() {
       // Se não tem colunas selecionadas, mostra todas 
       return this.selectedColumns.length > 0 ? this.selectedColumns : this.columns;
     }
   },
   methods: {
+    openRowUrl(url) {
+      if (url) {
+        window.open(url, '_blank');
+        //window.location.href = url;
+      }
+    },
+    
     dateFilter(range) {
       console.log(range);
             if (range && range.length > 0) {
@@ -265,6 +301,11 @@ export default {
 </script>
 
 <style scoped>
+tr:hover td {
+  background-color: #e6e6e6; 
+  transition: background-color 0.3s; 
+  text-decoration: underline;
+}
  .btn-light{
         background-color: white !important;
         border: 1px solid #ddd !important;
@@ -280,5 +321,15 @@ export default {
     .colbtn{
       justify-content: center !important;
     }
+  }
+  .tooltip {
+    position: absolute;
+    background-color: #333;
+    color: #fff;
+    padding: 5px;
+    border-radius: 4px;
+    font-size: 12px;
+    z-index: 1000;
+    display: none;
   }
 </style>
