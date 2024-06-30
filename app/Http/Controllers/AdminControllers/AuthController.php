@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
-
+use App\Rules\Cpf;
 class AuthController extends Controller
 {
     public function login()
@@ -26,7 +26,10 @@ class AuthController extends Controller
 
         return view('admin.dashboard.dashboard', get_defined_vars());
     }
-
+    public function showRegisterForm()
+    {
+        return view('admin.auth.register');
+    }
 
     /**
      * Admin Login
@@ -134,6 +137,40 @@ class AuthController extends Controller
             } else {
                 return redirect()->back()->with('error', 'Database Error. Please Contact Support');
             }
+        }
+    }
+    public function register(Request $request)
+    {
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:admins',
+            'cpf' => ['required', 'string', 'size:11', 'unique:admins', new Cpf],
+        ]);
+//            'password' => 'required|string|min:8|confirmed',
+
+        DB::beginTransaction();
+
+
+        try {
+            $admin = Admin::create([
+                'name' => $validatedData['name'],
+                'email' => $validatedData['email'],
+                'cpf' => $validatedData['cpf'],
+                'password' => Hash::make($request->password),
+            ]);
+
+            // Atribui a role de usuário (role_id = 2)
+            $admin->roles()->attach(2);
+
+            DB::commit();
+
+            // Loga o usuário recém registrado
+            Auth::guard('admin')->login($admin);
+
+            return redirect()->route('admin_dashboard');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Ocorreu um erro ao registrar o usuário. Certifique-se de informar um email ainda nao utilizado e um CPF válido');
         }
     }
 }

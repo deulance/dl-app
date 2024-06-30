@@ -27,6 +27,10 @@ Route::get('/', function () {
 
 Route::prefix('admin')->group(function(){
 
+    Route::get('register', [AuthController::class, 'showRegisterForm'])->name('admin_show_register_form');
+    Route::post('register', [AuthController::class, 'register'])->name('admin_register');
+
+
     Route::post('/logedIn', [AuthController::class, 'loginProcess'])->name('admin_login_process');
     Route::get('/login', [AuthController::class, 'login'])->name('admin_login');
     Route::group(['middleware' => ['auth.admin']], function () {
@@ -39,8 +43,8 @@ Route::prefix('admin')->group(function(){
         Route::post('/change_password', [AuthController::class, 'update_password'])->name('update_password');
 
         
-        Route::get('/deulanceboard', [DeulanceBoardController::class, 'index'])->middleware(CheckAdminPermission::class . ':"Leaderboard"')->name('admin.deulanceboard');
-        Route::post('/deulanceboard/fetch_data', [DeulanceBoardController::class, 'fetch_data'])->middleware(CheckAdminPermission::class . ':"Leaderboard"')->name('admin.deulanceboard.fetch');
+        Route::get('/deulanceboard', [DeulanceBoardController::class, 'index'])->middleware(CheckAdminPermission::class . ':"Ver Tabela"')->name('admin.deulanceboard');
+        Route::post('/deulanceboard/fetch_data', [DeulanceBoardController::class, 'fetch_data'])->middleware(CheckAdminPermission::class . ':"Ver Tabela"')->name('admin.deulanceboard.fetch');
         
         
         Route::name('admin.')->group(function() {

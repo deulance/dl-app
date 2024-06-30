@@ -20,7 +20,7 @@
                 <a href="{{ route('admin.roles.index') }}" class="nav-link"><i data-feather="unlock"></i><span>Manage Roles</span></a>
             </li> 
             @endcan   
-            @can('View Table','full access')
+            @can('Ver Tabela','full access')
             <li class="dropdown {{ request()->is('admin/deulanceboard*') ? 'active' : '' }}">
                 <a href="{{ route('admin.deulanceboard') }}" class="nav-link"><i data-feather="monitor"></i><span>Tabela</span></a>
             </li>

@@ -6,7 +6,7 @@ use App\Models\Deulance;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class LeaderBoardSeeder extends Seeder
+class DeulanceSeeder extends Seeder
 {
     /**
      * Run the database seeds.
